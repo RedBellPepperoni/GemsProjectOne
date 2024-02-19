@@ -30,10 +30,19 @@ void LoadPersonData()
 
 int main(int argc, char* argv)
 {
-	
+	// Load all the Database files 
 	LoadPersonData();
 
-	personGenerator;
 
+	cPerson* randomPersoneOne = personGenerator.generateRandomPerson();
+	cPerson* randomPersoneTwo = personGenerator.generateRandomPerson();
+	cPerson* randomPersoneThree = personGenerator.generateRandomPerson();
+	cPerson* randomPersoneFour = personGenerator.generateRandomPerson();
+	cPerson* randomPersoneFive = personGenerator.generateRandomPerson();
 
+	delete randomPersoneOne;
+	delete randomPersoneTwo;
+	delete randomPersoneThree;
+	delete randomPersoneFour;
+	delete randomPersoneFive;
 }

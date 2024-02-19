@@ -59,7 +59,24 @@ unsigned int cPersonGenerator::getNumberOfStreetsLoaded(void)
 
 cPerson* cPersonGenerator::generateRandomPerson(void)
 {
-	return nullptr;
+	// Create a new Person on Heap
+	cPerson* person = new cPerson();
+	//cPerson* person = std::make_shared<cPerson>().get();
+
+	//==== Generate a Random Gender ( only Randomizing between Female / male and non_binary ) ==========
+	person->gender = (cPerson::eGenderType)cRandom::Range(0,2);
+
+	// ======== generate the First and Last name =========================
+	person->first = GetRandomFirstName(person->gender);
+	person->last = GetRandomLastName();
+
+
+	StreetData randomStreetData = GetRandomStreetAddress();
+	person->streetName = randomStreetData.StreetName;
+	person->streetType = randomStreetData.StreetType;
+	person->streetDirection = randomStreetData.PostDirection;
+
+	return person;
 }
 
 bool cPersonGenerator::LoadFirstNames(const std::string& path, std::string& errorMsg)
@@ -288,6 +305,100 @@ std::string cPersonGenerator::GetRandomPostDirection()
 	default: return "SOUTH";
 		break;
 	}
+}
+
+const std::string cPersonGenerator::GetRandomFirstName(const cPerson::eGenderType& gender) const
+{
+
+	int randomFirstNameIndex = 0;
+	int randomContainerIndex = 2;
+
+	switch (gender)
+	{
+	case cPerson::eGenderType::FEMALE: 
+
+		// Gather a random Female name and return it
+		randomFirstNameIndex = cRandom::Range(0, (int32_t)m_firstNamesFemale.Size() - 1);
+		return m_firstNamesFemale[randomFirstNameIndex];
+		break;
+
+	case cPerson::eGenderType::MALE :
+
+		// Gather a random Male name and return it
+		randomFirstNameIndex = cRandom::Range(0, (int32_t)m_firstNamesMale.Size() - 1);
+		return m_firstNamesMale[randomFirstNameIndex];
+		break;
+
+	case cPerson::eGenderType::NON_BINARY: 
+
+		// get what data container should be accesses  : since Non binary can pull from any name List
+		randomContainerIndex = cRandom::Range(0, 2);
+
+		switch (randomContainerIndex)
+		{
+			// Get a Female Names
+		case 0:  // Gather a random Female name and return it
+
+			randomFirstNameIndex = cRandom::Range(0, m_firstNamesFemale.Size() - 1);
+			return m_firstNamesFemale[randomFirstNameIndex];
+			break;
+
+			//get a Male name
+		case 1: // Gather a random Male name and return it
+			
+			randomFirstNameIndex = cRandom::Range(0, m_firstNamesMale.Size() - 1);
+			return m_firstNamesMale[randomFirstNameIndex];
+			break;
+
+			// Get a No Pref name
+		case 2:
+			
+			randomFirstNameIndex = cRandom::Range(0, m_firstNamesNoPref.Size() - 1);
+			return m_firstNamesNoPref[randomFirstNameIndex];
+			break;
+
+		default:
+			break;
+		}
+
+	default: 
+		break;
+	}
+
+	
+}
+
+const std::string cPersonGenerator::GetRandomLastName() const
+{
+	//https://stackoverflow.com/questions/8529665/changing-probability-of-getting-a-random-number
+
+	float distributedpercentage = cRandom::Range(0.0f, 1.0f);
+	float currentcumulative = 0;
+
+	for (int i = m_lastNames.Size() -1; i >= 0 ; i--)
+	{
+		LastNameData data = m_lastNames[i];
+		currentcumulative += data.Probability;
+
+		if (distributedpercentage < currentcumulative )
+		{
+			return  m_lastNames[i].LastName;
+		}
+		else
+		{
+			if (i == 0)
+			{
+				return m_lastNames[0].LastName;
+			}
+		}
+	}
+
+}
+
+const StreetData cPersonGenerator::GetRandomStreetAddress() const
+{
+	int randomStreetIndex = cRandom::Range(0, m_streetNames.Size() - 1);
+	return m_streetNames[randomStreetIndex];
 }
 
 

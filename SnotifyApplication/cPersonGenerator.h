@@ -13,7 +13,6 @@ struct LastNameData
 };
 
 
-
 struct StreetData
 {
 	std::string StreetName;
@@ -63,7 +62,12 @@ private:
 	bool LoadLastNames(const std::string& path, std::string& errorMsg);
 	bool LoadStreatNames(const std::string& path, std::string& errorMsg);
 
-	std::string GetRandomPostDirection() ;
+	std::string GetRandomPostDirection();
+
+	const std::string GetRandomFirstName(const cPerson::eGenderType& gender) const;
+	const std::string GetRandomLastName() const;
+	const StreetData GetRandomStreetAddress() const;
+
 
 
 private:
