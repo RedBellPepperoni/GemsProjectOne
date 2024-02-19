@@ -4,11 +4,21 @@
 #include <string>
 #include "cPerson.h"
 #include "cVector.h"
+#include "cRandom.h"
 
-struct LastNamePair
+struct LastNameData
 {
-	std::string Lastname;
-	float probability;
+	std::string LastName;
+	float Probability;
+};
+
+
+
+struct StreetData
+{
+	std::string StreetName;
+	std::string StreetType;
+	std::string PostDirection;
 };
 
 
@@ -51,6 +61,9 @@ private:
 
 	bool LoadFirstNames(const std::string& path, std::string& errorMsg);
 	bool LoadLastNames(const std::string& path, std::string& errorMsg);
+	bool LoadStreatNames(const std::string& path, std::string& errorMsg);
+
+	std::string GetRandomPostDirection() ;
 
 
 private:
@@ -63,10 +76,10 @@ private:
 
 
 	// ============ Teh Storage for Last names and the Probabilities ==============
-	cVector<LastNamePair> m_lastNames;
+	cVector<LastNameData> m_lastNames;
 
-	
-
+	// ============= Teh Storage for Street Data (name, Type and Post Direction)
+	cVector<StreetData> m_streetNames;
 };
 
 

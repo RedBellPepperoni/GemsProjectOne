@@ -34,17 +34,22 @@ bool cPersonGenerator::LoadCensusFiles(
 		return false;
 	}
 
+	if (!LoadStreatNames(streetNameFile, errorString))
+	{
+		return false;
+	}
+
 	return true;
 }
 
 unsigned int cPersonGenerator::getNumberOfNamesLoaded(void)
 {
-	return 0;
+	return m_firstNamesFemale.Size() + m_firstNamesMale.Size() + m_firstNamesNoPref.Size();
 }
 
 unsigned int cPersonGenerator::getNumberOfSurnamesLoaded(void)
 {
-	return 0;
+	return m_lastNames.Size();
 }
 
 unsigned int cPersonGenerator::getNumberOfStreetsLoaded(void)
@@ -70,6 +75,8 @@ bool cPersonGenerator::LoadFirstNames(const std::string& path, std::string& erro
 	std::string theLine;
 
 	unsigned int lineCount = 0;
+	unsigned int loadCount = 0;
+
 	while (std::getline(namesFile, theLine))
 	{
 		lineCount++;
@@ -110,6 +117,8 @@ bool cPersonGenerator::LoadFirstNames(const std::string& path, std::string& erro
 				{
 					m_firstNamesNoPref.Emplace(babyName);
 				}
+
+				loadCount++;
 				break;
 
 			}
@@ -118,7 +127,7 @@ bool cPersonGenerator::LoadFirstNames(const std::string& path, std::string& erro
 		}
 	}
 
-	std::cout << "Lines read = " << lineCount << std::endl;
+	printf("Person Generator : Loaded [%d] / [%d]First Names \n",loadCount, lineCount);
 	
 }
 
@@ -135,6 +144,8 @@ bool cPersonGenerator::LoadLastNames(const std::string& path, std::string& error
 	std::string theLine;
 
 	unsigned int lineCount = 0;
+	unsigned int loadCount = 0;
+
 	while (std::getline(namesFile, theLine))
 	{
 		lineCount++;
@@ -166,13 +177,15 @@ bool cPersonGenerator::LoadLastNames(const std::string& path, std::string& error
 				// Convert the string to a float value
 				float count = std::stof(token);
 
-				LastNamePair pair;
+				LastNameData pair;
 
-				pair.Lastname = lastName;
-				pair.probability = count / 100'000.0f;
+				pair.LastName = lastName;
+				pair.Probability = count / 100'000.0f;
 
 				m_lastNames.Emplace(pair);
 
+
+				loadCount++;
 				break;
 
 			
@@ -183,7 +196,98 @@ bool cPersonGenerator::LoadLastNames(const std::string& path, std::string& error
 		}
 	}
 
-	std::cout << "Lines read = " << lineCount << std::endl;
+	printf("Person Generator : Loaded [%d]/[%d] Last Names \n",loadCount, lineCount - 1);
+}
+
+bool cPersonGenerator::LoadStreatNames(const std::string& path, std::string& errorMsg)
+{
+	if (!cFile::FileExists(path))
+	{
+		errorMsg = "Person Generator : Couldn't load Street Addresses : [File not found]";
+		return false;
+	}
+
+	
+	std::ifstream namesFile(path);
+	std::string theLine;
+
+	unsigned int lineCount = 0;
+	unsigned int loadCount = 0;
+	while (std::getline(namesFile, theLine))
+	{
+		lineCount++;
+		std::stringstream ssLine(theLine);
+
+		std::string token;
+		unsigned int tokenCount = 0;
+
+		std::string streetName;
+		std::string streetType;
+		std::string postDirection;
+
+		//If its the first 
+		if (lineCount == 1)
+		{
+			continue;
+		}
+
+
+		while (std::getline(ssLine, token, ','))
+		{
+
+			switch (tokenCount)
+			{
+				// The strrt name
+			case 1: streetName = token;
+				break;
+
+			case 2:
+				streetType = token;
+				break;
+
+			case 3: 
+				postDirection = token;
+		
+
+			}
+
+		
+
+			tokenCount++;
+		}
+
+		StreetData streetData;
+
+		streetData.StreetName = streetName;
+		streetData.StreetType = streetType;
+		streetData.PostDirection = postDirection.empty() ? GetRandomPostDirection() : postDirection;
+
+		m_streetNames.Emplace(streetData);
+		loadCount++;
+
+	}
+
+	printf("Person Generator : Loaded [%d]/[%d] Street addresses \n",loadCount, lineCount);
+}
+
+std::string cPersonGenerator::GetRandomPostDirection() 
+{
+	int randomDirectionIndex = cRandom::Range(0,3);
+
+	switch (randomDirectionIndex)
+	{
+	case 0: return "NORTH";
+		break; 
+	case 1: return "EAST";
+		break;
+	case 2: return "WEST";
+		break;
+
+	case 3: 
+		// fall condition
+	default: return "SOUTH";
+		break;
+	}
 }
 
 

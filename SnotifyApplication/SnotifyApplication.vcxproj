@@ -130,6 +130,7 @@
     <ClInclude Include="cAssert.h" />
     <ClInclude Include="cFile.h" />
     <ClInclude Include="cMusicGenerator.h" />
+    <ClInclude Include="cRandom.h" />
     <ClInclude Include="cSong.h" />
     <ClInclude Include="cPerson.h" />
     <ClInclude Include="cPersonGenerator.h" />
@@ -141,6 +142,7 @@
     <ClCompile Include="cMusicGenerator.cpp" />
     <ClCompile Include="cPerson.cpp" />
     <ClCompile Include="cPersonGenerator.cpp" />
+    <ClCompile Include="cRandom.cpp" />
     <ClCompile Include="cSnotify.cpp" />
     <ClCompile Include="theMain.cpp" />
   </ItemGroup>
