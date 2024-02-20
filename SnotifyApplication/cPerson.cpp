@@ -11,13 +11,16 @@ cPerson::cPerson()
 	this->age = -1;
 
 	// Get a random number 
-	this->SIN = cRandom::Range(100000000,999999999);
+	this->SIN = cRandom::Range.Get(100000000,999999999);
 
 	// Generate unique Snotify ID
 	this->m_Snotify_UniqueUserID = cPerson::m_NEXT_Snotify_UniqueUSerID;
 	// Increment for next created user by a small random amount 
-	const unsigned int MAX_ID_INCREEMNT = 11;
-	cPerson::m_NEXT_Snotify_UniqueUSerID += (rand() % MAX_ID_INCREEMNT);
+	/*const unsigned int MAX_ID_INCREEMNT = 11;
+	cPerson::m_NEXT_Snotify_UniqueUSerID += (rand() % MAX_ID_INCREEMNT);*/
+
+	cPerson::m_NEXT_Snotify_UniqueUSerID += cRandom::Range(1,11);
+
 }
 
 // The 1st Snotify user will have ID: 10,000,000

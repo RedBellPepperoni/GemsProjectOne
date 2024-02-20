@@ -103,8 +103,9 @@ private:
 
 	// User List by SIN
 	cHashMap<int, cPerson*> m_userListSIN;
+
 	// Data container to store users by snotify ID
-	cHashMap<int, cPerson*> m_userListSnotifyID;
+	cHashMap<int, int> m_snotifyIDToSIN;
 	//cVector<int> m_UserId
 
 

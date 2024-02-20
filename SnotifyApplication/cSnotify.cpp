@@ -48,15 +48,16 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString)
 	{
 		// Add to Both maps (High Space complexity but very low timecomplexity)
 		m_userListSIN.Add(pPerson->GetSIN(), pPerson);
-		m_userListSnotifyID.Add(pPerson->getSnotifyUniqueUserID(), pPerson);
+		m_snotifyIDToSIN.Add(pPerson->getSnotifyUniqueUserID(), pPerson->GetSIN());
 
 		return true;
 	}
 
+	// Update values incase of Deleted Error
 	if (iterator->value == nullptr)
 	{
 		iterator->value = pPerson;
-		m_userListSnotifyID[pPerson->getSnotifyUniqueUserID()] = pPerson;
+		m_snotifyIDToSIN[pPerson->getSnotifyUniqueUserID()] = pPerson->GetSIN();
 		return true;
 	}
 
@@ -83,7 +84,7 @@ bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString)
 
 
 	iterator->value = pPerson;
-	m_userListSnotifyID[pPerson->getSnotifyUniqueUserID()] = iterator->value;
+	m_snotifyIDToSIN[pPerson->getSnotifyUniqueUserID()] = pPerson->GetSIN();
 
 	return true;
 	
@@ -91,7 +92,7 @@ bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString)
 
 bool cSnotify::DeleteUser(unsigned int SnotifyUserID, std::string& errorString)
 {
-	cHashElement<int, cPerson*>* iterator = m_userListSnotifyID.Find(SnotifyUserID);
+	cHashElement<int, int>* iterator = m_snotifyIDToSIN.Find(SnotifyUserID);
 
 	if (iterator == nullptr)
 	{
@@ -99,14 +100,13 @@ bool cSnotify::DeleteUser(unsigned int SnotifyUserID, std::string& errorString)
 		return false;
 	}
 
-	cPerson* person = iterator->value;
-	int SIN = person->GetSIN();
-
-	m_userListSnotifyID.Remove(SnotifyUserID);
+	int SIN = iterator->value;
+	cPerson* perosn = m_userListSIN.Find(SIN)->value;
+	m_snotifyIDToSIN.Remove(SnotifyUserID);
 	m_userListSIN.Remove(SIN);
 
-	delete person;
-	
+	delete perosn;
+
 }
 
 bool cSnotify::AddSong(cSong* pSong, std::string& errorString)
@@ -171,7 +171,23 @@ cPerson* cSnotify::FindUserBySIN(unsigned int SIN)
 
 cPerson* cSnotify::FindUserBySnotifyID(unsigned int SnotifyID)
 {
-	return nullptr;
+	cHashElement<int, int>* snotIterator = m_snotifyIDToSIN.Find(SnotifyID);
+
+	if (snotIterator == nullptr)
+	{
+		printf("Snotify : Couldn't Find User with Snotify ID :[%d] ", SnotifyID);
+		return nullptr;
+	}
+
+	cHashElement<int, cPerson*>* iterator = m_userListSIN.Find(snotIterator->value);
+
+	if (iterator == nullptr)
+	{
+		//printf("Snotify : Couldn't Find User with SIN :[%d] ", SIN);
+		return nullptr;
+	}
+
+	return iterator->value;
 }
 
 cSong* cSnotify::FindSong(std::string title, std::string artist)

@@ -44,7 +44,7 @@ public:
 
 	inline uint32_t operator()(uint32_t min, uint32_t max)
 	{
-		//++m_count;
+		
 		std::uniform_int_distribution<uint32_t> uintDist(min, max);
 		return uintDist(m_randomGenerator);
 	}
@@ -52,7 +52,7 @@ public:
 	// Random gen for float value
 	inline float Get(float min, float max)
 	{
-		//++m_count;
+		
 		std::uniform_real_distribution<float> realDist(min, max);
 		return realDist(m_randomGenerator);
 	}
@@ -60,7 +60,7 @@ public:
 	// random gen for int 32 values
 	inline int32_t Get(int32_t min, int32_t max)
 	{
-		//++m_count;
+		
 		std::uniform_int_distribution<int32_t> intDist(min, max);
 		return intDist(m_randomGenerator);
 	}
@@ -68,7 +68,7 @@ public:
 	// random gen for unsigned int 32 values
 	inline uint32_t Get(uint32_t min, uint32_t max)
 	{
-		//++m_count;
+		
 		std::uniform_int_distribution<uint32_t> uintDist(min, max);
 		return uintDist(m_randomGenerator);
 	}
