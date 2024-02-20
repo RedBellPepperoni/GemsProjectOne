@@ -84,6 +84,9 @@ private:
 
 	// ============= Teh Storage for Street Data (name, Type and Post Direction)
 	cVector<StreetData> m_streetNames;
+
+
+	cVector<cPerson*> m_personDatabase;
 };
 
 

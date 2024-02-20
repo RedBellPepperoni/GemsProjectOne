@@ -1,5 +1,5 @@
 #include "cVector.h"
-
+#include "cHashMap.h"
 #include "cMusicGenerator.h"
 #include "cPerson.h"
 #include "cPersonGenerator.h"
@@ -27,22 +27,53 @@ void LoadPersonData()
 
 }
 
+struct Song
+{
+	std::string name;
+	int id;
+};
+
+
+
 
 int main(int argc, char* argv)
 {
 	// Load all the Database files 
 	LoadPersonData();
 
+	cHashMap<std::string, Song> testMap;
 
-	cPerson* randomPersoneOne = personGenerator.generateRandomPerson();
+	Song song;
+	song.name = "ShakeitOff";
+	song.id = 22;
+
+	testMap.Add("Pepper",song);
+
+
+
+	/*cPerson* randomPersoneOne = personGenerator.generateRandomPerson();
 	cPerson* randomPersoneTwo = personGenerator.generateRandomPerson();
 	cPerson* randomPersoneThree = personGenerator.generateRandomPerson();
 	cPerson* randomPersoneFour = personGenerator.generateRandomPerson();
-	cPerson* randomPersoneFive = personGenerator.generateRandomPerson();
+	cPerson* randomPersoneFive = personGenerator.generateRandomPerson();*/
 
-	delete randomPersoneOne;
-	delete randomPersoneTwo;
-	delete randomPersoneThree;
-	delete randomPersoneFour;
-	delete randomPersoneFive;
+	//delete randomPersoneOne;
+	//delete randomPersoneTwo;
+	//delete randomPersoneThree;
+	//delete randomPersoneFour;
+	//delete randomPersoneFive;
+
+	testMap;
+
+	cHashElement<std::string, Song>* iterator = testMap.Find("Beedo");
+	const cHashElement<std::string, Song>* iteratorTwo = testMap.Find("Pepper");
+
+	if (iterator)
+	{
+		Song newsong = iterator->value;
+	}
+
+	Song newsong = testMap["Pepper"];
+
+	
 }

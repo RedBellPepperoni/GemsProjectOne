@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="cAssert.h" />
     <ClInclude Include="cFile.h" />
+    <ClInclude Include="cHashMap.h" />
     <ClInclude Include="cMusicGenerator.h" />
     <ClInclude Include="cRandom.h" />
     <ClInclude Include="cSong.h" />

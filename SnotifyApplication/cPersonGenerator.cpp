@@ -15,6 +15,12 @@ cPersonGenerator::cPersonGenerator()
 
 cPersonGenerator::~cPersonGenerator()
 {
+	/*for (int i = 0; i < m_personDatabase.Size() - 1; i++)
+	{
+		delete m_personDatabase[i];
+	}*/
+
+
 }
 
 bool cPersonGenerator::LoadCensusFiles(
@@ -75,6 +81,8 @@ cPerson* cPersonGenerator::generateRandomPerson(void)
 	person->streetName = randomStreetData.StreetName;
 	person->streetType = randomStreetData.StreetType;
 	person->streetDirection = randomStreetData.PostDirection;
+
+	m_personDatabase.Emplace(person);
 
 	return person;
 }
