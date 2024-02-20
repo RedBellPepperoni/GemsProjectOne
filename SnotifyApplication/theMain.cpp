@@ -41,39 +41,6 @@ int main(int argc, char* argv)
 	// Load all the Database files 
 	LoadPersonData();
 
-	cHashMap<std::string, Song> testMap;
-
-	Song song;
-	song.name = "ShakeitOff";
-	song.id = 22;
-
-	testMap.Add("Pepper",song);
-
-
-
-	/*cPerson* randomPersoneOne = personGenerator.generateRandomPerson();
-	cPerson* randomPersoneTwo = personGenerator.generateRandomPerson();
-	cPerson* randomPersoneThree = personGenerator.generateRandomPerson();
-	cPerson* randomPersoneFour = personGenerator.generateRandomPerson();
-	cPerson* randomPersoneFive = personGenerator.generateRandomPerson();*/
-
-	//delete randomPersoneOne;
-	//delete randomPersoneTwo;
-	//delete randomPersoneThree;
-	//delete randomPersoneFour;
-	//delete randomPersoneFive;
-
-	testMap;
-
-	cHashElement<std::string, Song>* iterator = testMap.Find("Beedo");
-	const cHashElement<std::string, Song>* iteratorTwo = testMap.Find("Pepper");
-
-	if (iterator)
-	{
-		Song newsong = iterator->value;
-	}
-
-	Song newsong = testMap["Pepper"];
-
+	
 	
 }

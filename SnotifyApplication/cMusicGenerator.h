@@ -4,6 +4,7 @@
 #include "cRandom.h"
 #include "cSong.h"
 #include "cVector.h"
+#include "cHashMap.h"
 
 class cMusicGenerator
 {
@@ -22,8 +23,11 @@ public:
 
 private:
 
+	bool StoreNewSong(cSong* song);
+private:
 
-	cVector<cSong*> m_songDataBase;
+	// Global Song Database
+	cHashMap<std::string, cSong*> m_SongDataBase;
 
 	cVector<int> m_artistDatabase;
 

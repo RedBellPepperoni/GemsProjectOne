@@ -1,5 +1,5 @@
-#ifndef _cHashMap_HG
-#define _cHashMap_HG
+#ifndef _cHashMap_H
+#define _cHashMap_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,36 +9,7 @@
 
 namespace customHash {
 
-    const unsigned int HASH_NUM = 31337;
-    // Size of linked elemnts
-    const unsigned int DEFAULTsize = 4;
-
-    unsigned int GenerateHash(const int& key, const unsigned int& cHashMapsize) 
-    {
-        return (key * HASH_NUM) % cHashMapsize;
-    }
-
-    unsigned int GenerateHash(const std::string& key, const unsigned int& cHashMapsize) 
-    {
-        unsigned int position = 0;
-        for (unsigned int i = 0; i < key.size(); i++) 
-        {
-            position += key[i] * i;
-        }
-
-        return position % cHashMapsize;
-    }
-
-    unsigned int GenerateHash(const char* key, const unsigned int& cHashMapsize) 
-    {
-        unsigned int position = 0;
-        for (unsigned int i = 0; key[i] != '\0'; i++) 
-        {
-            position += key[i] * i;
-        }
-
-        return position % cHashMapsize;
-    }
+   
 
 }
 
@@ -79,7 +50,10 @@ bool cHashElement<Key, Value>::IsFilled() const
 template <typename Key, typename Value>
 class cHashMap 
 {
+public:
 
+    typedef const cHashElement<Key, Value>* const_iterator;
+    typedef cHashElement<Key, Value>* iterator;
 private:
     // Array of linked hashElements
     cHashElement<Key, Value>* hash_entries;
@@ -87,10 +61,44 @@ private:
     unsigned int num_entries;
 
     void Rehash(unsigned int);
+    iterator FindInternal(iterator& begin, iterator& end, const Key& key);
+    const_iterator FindInternalConst(const_iterator& begin, const_iterator& end, const Key& key) const;
+
+
+
+    const static unsigned int HASH_NUM = 31337;
+    // Size of linked elemnts
+    const static unsigned int DEFAULTsize = 4;
+
+    unsigned int GenerateHash(const int& key, const unsigned int& cHashMapsize)
+    {
+        return (key * HASH_NUM) % cHashMapsize;
+    }
+
+    unsigned int GenerateHash(const std::string& key, const unsigned int& cHashMapsize)
+    {
+        unsigned int position = 0;
+        for (unsigned int i = 0; i < key.size(); i++)
+        {
+            position += key[i] * i;
+        }
+
+        return position % cHashMapsize;
+    }
+
+    unsigned int GenerateHash(const char* key, const unsigned int& cHashMapsize)
+    {
+        unsigned int position = 0;
+        for (unsigned int i = 0; key[i] != '\0'; i++)
+        {
+            position += key[i] * i;
+        }
+
+        return position % cHashMapsize;
+    }
 
 public:
-    typedef const cHashElement<Key, Value>* const_iterator;
-    typedef cHashElement<Key, Value>* iterator;
+   
 
     cHashMap();
     explicit cHashMap(unsigned int size);
@@ -102,9 +110,9 @@ public:
     inline const_iterator cEnd() const;
     inline unsigned int Size() const;
     inline unsigned int Entries() const;
-    const_iterator FindInternalConst(const_iterator& begin, const_iterator& end, const Key& key) const;
+    
     const_iterator Find(const Key& key) const;
-    iterator FindInternal(iterator& begin, iterator& end, const Key key);
+   
     iterator Find(const Key& key);
     void Add(const Key& key, const Value& value);
     void Remove(const Key& key);
@@ -114,11 +122,11 @@ public:
 
 
 
-#endif // !_cHashMap_HG
+
 template <typename Key, typename Value>
 cHashMap<Key, Value>::cHashMap()
-    : hash_entries(new cHashElement<Key, Value>[customHash::DEFAULTsize])
-    , cHashMapsize(customHash::DEFAULTsize)
+    : hash_entries(new cHashElement<Key, Value>[DEFAULTsize])
+    , cHashMapsize(DEFAULTsize)
     , num_entries(0)
 {
 }
@@ -204,7 +212,7 @@ typename cHashMap<Key, Value>::const_iterator cHashMap<Key, Value>::FindInternal
 
 
 template <typename Key, typename Value>
-typename cHashMap<Key, Value>::iterator cHashMap<Key, Value>::FindInternal(iterator& begin, iterator& end, const Key key)
+typename cHashMap<Key, Value>::iterator cHashMap<Key, Value>::FindInternal(iterator& begin, iterator& end, const Key& key)
 {
     for (iterator beg = begin; beg != end; ++beg)
     {
@@ -251,7 +259,7 @@ void cHashMap<Key, Value>::Rehash(unsigned int newsize)
     {
         if (hash_entries[i].IsFilled())
         {
-            unsigned int position = customHash::GenerateHash(hash_entries[i].key, cHashMapsize);
+            unsigned int position = GenerateHash(hash_entries[i].key, cHashMapsize);
             while (new_cHashMap[position].IsFilled())
             {
                 position = (position + 1) % cHashMapsize;
@@ -272,7 +280,7 @@ void cHashMap<Key, Value>::Add(const Key& key, const Value& value)
     {
         Rehash(cHashMapsize * 2);
     }
-    unsigned int position = customHash::GenerateHash(key, cHashMapsize);
+    unsigned int position = GenerateHash(key, cHashMapsize);
     while (hash_entries[position].IsFilled())
     {
         position = (position + 1) % cHashMapsize;
@@ -285,7 +293,7 @@ void cHashMap<Key, Value>::Add(const Key& key, const Value& value)
 template <typename Key, typename Value>
 void cHashMap<Key, Value>::Remove(const Key& key)
 {
-    unsigned int position = customHash::GenerateHash(key, cHashMapsize);
+    unsigned int position = GenerateHash(key, cHashMapsize);
     for (unsigned int i = 0; i < cHashMapsize; ++i)
     {
         position = (position + 1) % cHashMapsize;
@@ -302,7 +310,7 @@ void cHashMap<Key, Value>::Remove(const Key& key)
 template <typename Key, typename Value>
 Value& cHashMap<Key, Value>::operator[](const Key& key)
 {
-    unsigned int position = customHash::GenerateHash(key, cHashMapsize);
+    unsigned int position = GenerateHash(key, cHashMapsize);
     unsigned int original_position(position);
 
     for (unsigned int i = 0; i < cHashMapsize; ++i)
@@ -328,5 +336,8 @@ Value& cHashMap<Key, Value>::operator[](const Key& key)
     ++num_entries;
     return hash_entries[original_position].value;
 }
+
+
+#endif // !_cHashMap_HG
 
 

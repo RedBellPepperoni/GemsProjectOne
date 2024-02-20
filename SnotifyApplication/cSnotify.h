@@ -3,6 +3,10 @@
 
 #include "cPerson.h"
 #include "cSong.h"
+#include <memory>
+
+class cMusicGenerator;
+class cPersonGenerator;
 
 
 class cSnotify
@@ -79,6 +83,12 @@ public:
 	// Sorted ascending by last name THEN first name.
 	bool FindUsersFirstLastNames(std::string firstName, std::string lastName, cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray);
 
+
+	//============ Custom Code Added here ================
+private:
+
+	std::shared_ptr<cMusicGenerator> m_musicGenerator;
+	std::shared_ptr<cPersonGenerator> m_personGenerator;
 
 };
 

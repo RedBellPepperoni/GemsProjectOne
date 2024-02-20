@@ -153,6 +153,7 @@ bool cPersonGenerator::LoadFirstNames(const std::string& path, std::string& erro
 	}
 
 	printf("Person Generator : Loaded [%d] / [%d]First Names \n",loadCount, lineCount);
+	return true;
 	
 }
 
@@ -221,7 +222,9 @@ bool cPersonGenerator::LoadLastNames(const std::string& path, std::string& error
 		}
 	}
 
+
 	printf("Person Generator : Loaded [%d]/[%d] Last Names \n",loadCount, lineCount - 1);
+	return true;
 }
 
 bool cPersonGenerator::LoadStreatNames(const std::string& path, std::string& errorMsg)
@@ -293,6 +296,7 @@ bool cPersonGenerator::LoadStreatNames(const std::string& path, std::string& err
 	}
 
 	printf("Person Generator : Loaded [%d]/[%d] Street addresses \n",loadCount, lineCount);
+	return true;
 }
 
 std::string cPersonGenerator::GetRandomPostDirection() 
