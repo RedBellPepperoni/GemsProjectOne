@@ -2,6 +2,8 @@
 #include "cMusicGenerator.h"
 #include "cPersonGenerator.h"
 
+
+
 //// This returns a COPY of the users library, in the form of a regular dynamic array.
 //bool cSnotify::GetUsersSongLibrary(unsigned int snotifyUserID, cSong*& pLibraryArray, unsigned int& sizeOfLibary);
 //{
@@ -29,7 +31,8 @@
 
 cSnotify::cSnotify()
 {
-
+	// initialize the Pointers
+	m_musicGenerator = std::make_shared<cMusicGenerator>();
 
 }
 
@@ -39,12 +42,47 @@ cSnotify::~cSnotify()
 
 bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString)
 {
+	cHashElement<int, cPerson*>* iterator = m_userList.Find(pPerson->GetSIN());
+	
+	if (iterator == nullptr)
+	{
+		m_userList.Add(pPerson->GetSIN(), pPerson);
+		return true;
+	}
+
+		
+	errorString = "Snotify : Cannot Add : User Already Exists, ";
 	return false;
+
+
+	
 }
 
 bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString)
 {
-	return false;
+
+
+
+	cHashElement<int, cPerson*>* iterator = m_userList.Find(pPerson->GetSIN());
+
+	if (iterator == nullptr)
+	{
+		errorString = "Snotify : Couldn't Find User";
+		return false;
+	}
+
+
+	iterator->value->age = pPerson->age;
+	iterator->value->city = pPerson->city;
+	iterator->value->first = pPerson->first;
+	iterator->value->gender = pPerson->gender;
+	iterator->value->last = pPerson->last;
+	iterator->value->streetDirection = pPerson->streetDirection;
+	iterator->value->streetName = pPerson->streetName;
+	iterator->value->streetNumber = pPerson->streetNumber;
+
+	return true;
+	
 }
 
 bool cSnotify::DeleteUser(unsigned int SnotifyUserID, std::string& errorString)
@@ -99,7 +137,17 @@ bool cSnotify::GetCurrentSongNumberOfPlays(unsigned int snotifyUserID, unsigned 
 
 cPerson* cSnotify::FindUserBySIN(unsigned int SIN)
 {
-	return nullptr;
+	cHashElement<int, cPerson*>* iterator = m_userList.Find(SIN);
+
+	if (iterator == nullptr)
+	{
+		printf("Snotify : Couldn't Find User with SIN :[%d] ",SIN);
+		return nullptr;
+	}
+
+	return iterator->value;
+
+
 }
 
 cPerson* cSnotify::FindUserBySnotifyID(unsigned int SnotifyID)
@@ -155,4 +203,21 @@ bool cSnotify::FindUsersLastName(std::string lastName, cPerson*& pAllTheUsers, u
 bool cSnotify::FindUsersFirstLastNames(std::string firstName, std::string lastName, cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray)
 {
 	return false;
+}
+
+
+
+void cSnotify::LoadMusicDataBase()
+{
+	std::string errorString;
+
+	if (m_musicGenerator->LoadMusicInformation(musicFilePath, errorString))
+	{
+		printf("\n----------------------------------------------------\n");
+	}
+
+	else
+	{
+		printf(errorString.c_str());
+	}
 }

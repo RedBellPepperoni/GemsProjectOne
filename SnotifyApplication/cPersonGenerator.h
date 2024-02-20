@@ -56,6 +56,14 @@ public:
 	// Returns 0, NULL, or nullptr if it can't do this. 
 	cPerson* generateRandomPerson(void);
 
+	// Custom Code Here
+
+	void UpdateFirstNameFilePath(const std::string& newPath) { babyNameFilePath = newPath; }
+	void UpdateLastNameFilePath(const std::string& newPath) { lastNameFilePath = newPath; }
+	void UpdateStreetNameFilePath(const std::string& newPath) { streetNameFilePath = newPath; }
+
+	void LoadPersonData();
+
 private:
 
 	bool LoadFirstNames(const std::string& path, std::string& errorMsg);
@@ -85,8 +93,9 @@ private:
 	// ============= Teh Storage for Street Data (name, Type and Post Direction)
 	cVector<StreetData> m_streetNames;
 
-
-	cVector<cPerson*> m_personDatabase;
+	std::string babyNameFilePath = "Data\\yob2010.txt";
+	std::string lastNameFilePath = "Data\\Names_2010Census.csv";
+	std::string streetNameFilePath = "Data\\Street_Names.csv";
 };
 
 

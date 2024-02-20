@@ -28,7 +28,7 @@ private:
 private:
 
 	// Global Song Database
-	cHashMap<int, cSong*> m_SongDataBase = cHashMap<int,cSong*>(40000);
+	cHashMap<int, cSong*> m_SongDataBase = cHashMap<int, cSong*>(40000);
 
 	cVector<int> m_artistDatabase;
 

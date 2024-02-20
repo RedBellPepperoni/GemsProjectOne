@@ -82,9 +82,22 @@ cPerson* cPersonGenerator::generateRandomPerson(void)
 	person->streetType = randomStreetData.StreetType;
 	person->streetDirection = randomStreetData.PostDirection;
 
-	m_personDatabase.Emplace(person);
-
 	return person;
+}
+
+void cPersonGenerator::LoadPersonData()
+{
+	std::string errorString;
+
+	if (LoadCensusFiles(babyNameFilePath, lastNameFilePath, streetNameFilePath, errorString))
+	{
+		printf("\n----------------------------------------------------\n");
+	}
+
+	else
+	{
+		printf(errorString.c_str());
+	}
 }
 
 bool cPersonGenerator::LoadFirstNames(const std::string& path, std::string& errorMsg)

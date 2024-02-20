@@ -3,6 +3,8 @@
 
 #include "cPerson.h"
 #include "cSong.h"
+#include "cVector.h"
+#include "cHashMap.h"
 #include <memory>
 
 class cMusicGenerator;
@@ -85,10 +87,28 @@ public:
 
 
 	//============ Custom Code Added here ================
+
+
+	void UpdateMusicFilePath(const std::string& newPath) { musicFilePath = newPath; }
+
+	void LoadMusicDataBase();
+
+	cHashMap<int, cPerson*>& getUserList() { return m_userList; }
+
 private:
 
+	// The Safe pointers to each of the generator class
 	std::shared_ptr<cMusicGenerator> m_musicGenerator;
-	std::shared_ptr<cPersonGenerator> m_personGenerator;
+
+
+	//cVector<cPerson*> m_userList;
+
+	cHashMap<int, cPerson*> m_userList;
+	//cVector<int> m_UserId
+
+
+
+	std::string musicFilePath = "Data\\hot_stuff_2.csv";
 
 };
 

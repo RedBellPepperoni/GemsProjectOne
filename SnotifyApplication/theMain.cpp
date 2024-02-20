@@ -1,58 +1,56 @@
-#include "cVector.h"
-#include "cHashMap.h"
-#include "cMusicGenerator.h"
-#include "cPerson.h"
-#include "cPersonGenerator.h"
 #include "cSnotify.h"
-#include "cSong.h"
-
-static std::string babyNameFilePath = "Data\\yob2010.txt";
-static std::string lastNameFilePath = "Data\\Names_2010Census.csv";
-static std::string streetNameFilePath = "Data\\Street_Names.csv";
-static std::string musicFilePath = "Data\\hot_stuff_2.csv";
-
- 
-static cPersonGenerator personGenerator;
-static cMusicGenerator musicGenerator;
-
-void LoadPersonData()
-{
-	
-	std::string errorString = std::string();
-
-	if(!personGenerator.LoadCensusFiles(babyNameFilePath,lastNameFilePath, streetNameFilePath,errorString))
-	{
-		printf(errorString.c_str());
-	}
-
-}
-
-void LoadMusicData()
-{
-	std::string errorString = std::string();
-
-	if (!musicGenerator.LoadMusicInformation(musicFilePath, errorString))
-	{
-		printf(errorString.c_str());
-	}
-}
-
-struct Song
-{
-	std::string name;
-	int id;
-};
-
-
-
+#include "cPersonGenerator.h";
+#include <string.h>
 
 int main(int argc, char* argv)
-{
-	// Load all the Database files 
-	LoadPersonData();
+{	
+	//Creating a Person Generator
+	std::shared_ptr<cPersonGenerator> personGenerator = std::make_shared<cPersonGenerator>();
+	// Update Peron data file paths
+	personGenerator->UpdateFirstNameFilePath("Data\\yob2010.txt");
+	personGenerator->UpdateLastNameFilePath("Data\\Names_2010Census.csv");
+	personGenerator->UpdateStreetNameFilePath("Data\\Street_Names.csv");
 
-	LoadMusicData();
+	personGenerator->LoadPersonData();
 
-	musicGenerator;
+	// Create a new snotify class
+	std::shared_ptr<cSnotify> snotify = std::make_shared<cSnotify>(); 
+
+	// Update the Data file paths Here
+	snotify->UpdateMusicFilePath("Data\\hot_stuff_2.csv"); 
+
+	// Load all the data from the === Usually please call these function once per snotify class
+	snotify->LoadMusicDataBase(); 
+
+
+	std::string errorString;
+
+	cPerson* newPerson = personGenerator->generateRandomPerson();
+
+	std::string old_name = newPerson->first;
+
+	if (!snotify->AddUser(newPerson, errorString))
+	{
+		printf(errorString.c_str());
+	}
+
+
+	newPerson->first = "LEEEEEEEEEEEEEEEEEEEEEEEEEEEROY JENKINS";
+
+	//if (!snotify->AddUser(personGenerator->generateRandomPerson(), errorString))
+	//{
+	//	printf(errorString.c_str());
+	//}
+
+	//if (!snotify->AddUser(personGenerator->generateRandomPerson(), errorString))
+	//{
+	//	printf(errorString.c_str());
+	//}
+
+	snotify->getUserList();
 	
+	cPerson* person = snotify->FindUserBySIN(newPerson->GetSIN());
+
+	
+
 }

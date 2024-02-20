@@ -100,10 +100,7 @@ cSong* cMusicGenerator::findSong(std::string songName, std::string artist)
 bool cMusicGenerator::StoreNewSong(const std::string& songName, const std::string& artistName)
 {
 	std::string uniqueKey = songName + artistName; 
-
-	// gather a hash Id for duplicate keys
 	int songId = GenerateHash(uniqueKey, m_SongDataBase.Size());
-
 	// Checking if a entry exists for the given HAsh
 	cHashElement<int, cSong*>* duplicateEntry = m_SongDataBase.Find(songId);
 
@@ -114,10 +111,14 @@ bool cMusicGenerator::StoreNewSong(const std::string& songName, const std::strin
 
 		newSong->artist = artistName;
 		newSong->name = songName;
+		
 		newSong->SetUniqueID(songId);
 
 		m_SongDataBase.Add(songId, newSong);
 
+		
+
+		
 		return true;
 	}
 
