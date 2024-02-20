@@ -109,6 +109,11 @@ public:
 
 private:
 
+	UserSongs* GetSongData(const unsigned int snotifyUserID, const unsigned int snotifySongID);
+	SnotifyUser* GetUser(const unsigned int snotifyUserID);
+
+private:
+
 	
 
 	// ======= Data Container for Users

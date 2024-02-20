@@ -354,7 +354,7 @@ const std::string cPersonGenerator::GetRandomFirstName(const cPerson::eGenderTyp
 	case cPerson::eGenderType::NON_BINARY: 
 
 		// get what data container should be accesses  : since Non binary can pull from any name List
-		randomContainerIndex = cRandom::Range(0, 2);
+		randomContainerIndex = cRandom::Range(0, 1);
 
 		switch (randomContainerIndex)
 		{
