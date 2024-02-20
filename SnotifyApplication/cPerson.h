@@ -6,6 +6,8 @@
 #pragma warning( disable : 26812 )
 
 #include <string>
+#include "cVector.h"
+class cSong;
 
 class cPerson
 {
@@ -62,6 +64,9 @@ private:
 	unsigned int m_Snotify_UniqueUserID;
 	// 
 	static unsigned int m_NEXT_Snotify_UniqueUSerID;
+
+
+	cVector<cSong*> m_SongList;
 };
 
 

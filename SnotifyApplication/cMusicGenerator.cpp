@@ -67,34 +67,46 @@ bool cMusicGenerator::LoadMusicInformation(std::string musicFileName, std::strin
 		}
 
 		// Try to store a new Song
-		if (StoreNewSong(songName, artistName))
-		{
-			loadCount++;
-		}
-
-		else
-		{
-			duplicateCount++;
-		}
-
-
-		
+		StoreNewSong(songName, artistName);
+	
 
 	}
 
-	printf("Music Generator : Loaded [%d]/[%d] Songs addresses \n", loadCount, lineCount);
-	printf("Music Generator : [%d] Duplicate Songs found \n", duplicateCount);
 	return true;
 }
 
 cSong* cMusicGenerator::getRandomSong(void)
 {
-    return nullptr;
+	int randomSongIndex = cRandom::Range((uint32_t)0, (uint32_t)(m_SongDataBase.Entries() - 1));
+
+	cHashElement<int, cSong*>* itr = m_SongDataBase.Find(randomSongIndex);
+
+	if (itr == nullptr)
+	{
+		return getRandomSong();
+	}
+
+    return itr->value;
 }
 
 cSong* cMusicGenerator::findSong(std::string songName, std::string artist)
 {
     return nullptr;
+}
+
+void cMusicGenerator::LoadMusicDataBase()
+{
+	std::string errorString;
+
+	if (LoadMusicInformation(musicFilePath, errorString))
+	{
+		printf("\n----------------------------------------------------\n");
+	}
+
+	else
+	{
+		printf(errorString.c_str());
+	}
 }
 
 bool cMusicGenerator::StoreNewSong(const std::string& songName, const std::string& artistName)

@@ -31,8 +31,7 @@
 
 cSnotify::cSnotify()
 {
-	// initialize the Pointers
-	m_musicGenerator = std::make_shared<cMusicGenerator>();
+	
 
 }
 
@@ -43,6 +42,8 @@ cSnotify::~cSnotify()
 bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString)
 {
 	cHashElement<int, cPerson*>* iterator = m_userListSIN.Find(pPerson->GetSIN());
+
+	
 	
 	if (iterator == nullptr)
 	{
@@ -50,19 +51,24 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString)
 		m_userListSIN.Add(pPerson->GetSIN(), pPerson);
 		m_snotifyIDToSIN.Add(pPerson->getSnotifyUniqueUserID(), pPerson->GetSIN());
 
+		std::shared_ptr<SnotifyUser> user = std::make_shared<SnotifyUser>();
+		user->userId = pPerson->getSnotifyUniqueUserID();
+
+
+		m_UserSongDictionary.Emplace(user);
 		return true;
 	}
 
-	// Update values incase of Deleted Error
-	if (iterator->value == nullptr)
-	{
-		iterator->value = pPerson;
-		m_snotifyIDToSIN[pPerson->getSnotifyUniqueUserID()] = pPerson->GetSIN();
-		return true;
-	}
+	//// Update values incase of Deleted Error
+	//if (iterator->value == nullptr)
+	//{
+	//	iterator->value = pPerson;
+	//	m_snotifyIDToSIN[pPerson->getSnotifyUniqueUserID()] = pPerson->GetSIN();
+	//	return true;
+	//}
 
-		
-	errorString = "Snotify : Cannot Add : User Already Exists, ";
+	
+	errorString = "Snotify[AddUser]: User Already Exists \n";
 	return false;
 
 
@@ -72,13 +78,11 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString)
 bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString)
 {
 
-
-
 	cHashElement<int, cPerson*>* iterator = m_userListSIN.Find(pPerson->GetSIN());
 
 	if (iterator == nullptr)
 	{
-		errorString = "Snotify : Couldn't Find User";
+		errorString = "Snotify[UpdateUser]: Couldn't Find User\n";
 		return false;
 	}
 
@@ -96,42 +100,161 @@ bool cSnotify::DeleteUser(unsigned int SnotifyUserID, std::string& errorString)
 
 	if (iterator == nullptr)
 	{
-		errorString = "Snotify : NO User to Delete";
+		errorString = "Snotify[DeleteUser]: NO User to Delete\n";
 		return false;
 	}
 
 	int SIN = iterator->value;
 	cPerson* perosn = m_userListSIN.Find(SIN)->value;
 	m_snotifyIDToSIN.Remove(SnotifyUserID);
+
+	for (int i = 0; i < m_UserSongDictionary.Size(); i++)
+	{
+		if (m_UserSongDictionary[i]->userId == SnotifyUserID)
+		{
+			m_UserSongDictionary[i] = m_UserSongDictionary.Back();
+			m_UserSongDictionary.Pop();
+
+			break;
+		}
+
+	}
+
 	m_userListSIN.Remove(SIN);
 
 	delete perosn;
+	perosn = nullptr;
 
 }
 
 bool cSnotify::AddSong(cSong* pSong, std::string& errorString)
 {
+	if (pSong == nullptr) 
+	{
+		errorString = "Snotify[AddSong]: song is null\n"; 
+		return false;
+	}
+
+	cHashElement<int, cSong*>* iterator = m_songsList.Find(pSong->getUniqueID());
+
+	if (iterator == nullptr)
+	{
+		// Add to Both maps (High Space complexity but very low timecomplexity)
+		m_songsList.Add(pSong->getUniqueID(), pSong);
+		
+
+		return true;
+	}
+
+	errorString = "Snotify[AddSong]: Song Already Exists\n";
 	return false;
 }
 
 bool cSnotify::UpdateSong(cSong* pSong, std::string& errorString)
 {
-	return false;
+	cHashElement<int, cSong*>* iterator = m_songsList.Find(pSong->getUniqueID());
+
+	if (iterator == nullptr)
+	{
+		errorString = "Snotify[UpdateSong]: Song doesnt exist\n";
+		return false;
+	}
+
+	iterator->value = pSong;
+	return true;
 }
 
 bool cSnotify::DeleteSong(unsigned int UniqueSongID, std::string& errorString)
 {
-	return false;
+	cHashElement<int, cSong*>* iterator = m_songsList.Find(UniqueSongID);
+
+	if (iterator == nullptr)
+	{
+		errorString = "Snotify[Delete] Song Doesn't Exist\n";
+		return false;
+	}
+
+	cSong* song = iterator->value;
+	delete song;
+	song = nullptr;
+	m_songsList.Remove(UniqueSongID);
 }
 
 bool cSnotify::AddSongToUserLibrary(unsigned int snotifyUserID, cSong* pNewSong, std::string& errorString)
 {
-	return false;
+	if (pNewSong == nullptr)
+	{
+		printf("No valid song \n");
+		return false;
+
+	}
+	SnotifyUser* user = nullptr;
+
+	for (int i = 0; i < m_UserSongDictionary.Size(); i++)
+	{
+		if (m_UserSongDictionary[i]->userId == snotifyUserID)
+		{
+			user = m_UserSongDictionary[i].get();
+			break;
+		}
+
+	}
+
+	if (user == nullptr)
+	{
+		printf("No User Found with the id , %d\n", snotifyUserID);
+		return false;
+	}
+
+	std::shared_ptr<UserSongs> song = std::make_shared<UserSongs>();
+
+	song->songID = pNewSong->getUniqueID();
+	song->rating = 0;
+	song->playbackCount = 0;
+
+	user->songPlayList.Emplace(song);
+
+
 }
 
 bool cSnotify::RemoveSongFromUserLibrary(unsigned int snotifyUserID, unsigned int SnotifySongID, std::string& errorString)
 {
-	return false;
+
+	SnotifyUser* user = nullptr;
+
+	for (int i = 0; i < m_UserSongDictionary.Size(); i++)
+	{
+		if (m_UserSongDictionary[i]->userId == snotifyUserID)
+		{
+			user = m_UserSongDictionary[i].get();
+			break;
+		}
+
+	}
+
+	if (user == nullptr)
+	{
+		printf("No User Found with the id , %d\n", snotifyUserID);
+		return false;
+	}
+
+	bool found = false;
+
+	for (int i = 0; i < user->songPlayList.Size(); i++)
+	{
+		if (user->songPlayList[i]->songID == SnotifySongID)
+		{
+			user->songPlayList[i] = user->songPlayList.Back();
+			user->songPlayList.Pop();
+
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) { printf("No Song Found with the id , %d\n", SnotifySongID); return false; }
+
+	return true;
 }
 
 bool cSnotify::UpdateRatingOnSong(unsigned int SnotifyUserID, unsigned int songUniqueID, unsigned int newRating)
@@ -160,7 +283,7 @@ cPerson* cSnotify::FindUserBySIN(unsigned int SIN)
 
 	if (iterator == nullptr)
 	{
-		printf("Snotify : Couldn't Find User with SIN :[%d] ",SIN);
+		printf("Snotify : Couldn't Find User with SIN :[%d] \n",SIN);
 		return nullptr;
 	}
 
@@ -175,7 +298,7 @@ cPerson* cSnotify::FindUserBySnotifyID(unsigned int SnotifyID)
 
 	if (snotIterator == nullptr)
 	{
-		printf("Snotify : Couldn't Find User with Snotify ID :[%d] ", SnotifyID);
+		printf("Snotify : Couldn't Find User with Snotify ID :[%d] \n", SnotifyID);
 		return nullptr;
 	}
 
@@ -197,7 +320,14 @@ cSong* cSnotify::FindSong(std::string title, std::string artist)
 
 cSong* cSnotify::FindSong(unsigned int uniqueID)
 {
-	return nullptr;
+	cHashElement<int, cSong*>* snotIterator = m_songsList.Find(uniqueID);
+
+	if (snotIterator == nullptr)
+	{
+		printf("Snotify[FindSong] : Song doesnt exist with id %d ",uniqueID);
+	}
+
+	return  snotIterator->value;
 }
 
 bool cSnotify::GetUsersSongLibrary(unsigned int snotifyUserID, cSong*& pLibraryArray, unsigned int& sizeOfLibary)
@@ -240,19 +370,3 @@ bool cSnotify::FindUsersFirstLastNames(std::string firstName, std::string lastNa
 	return false;
 }
 
-
-
-void cSnotify::LoadMusicDataBase()
-{
-	std::string errorString;
-
-	if (m_musicGenerator->LoadMusicInformation(musicFilePath, errorString))
-	{
-		printf("\n----------------------------------------------------\n");
-	}
-
-	else
-	{
-		printf(errorString.c_str());
-	}
-}

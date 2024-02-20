@@ -10,6 +10,19 @@
 class cMusicGenerator;
 class cPersonGenerator;
 
+struct UserSongs
+{
+	int songID;
+	int playbackCount = 0;
+	int rating = 0;
+};
+
+
+struct SnotifyUser
+{
+	int userId;
+	cVector<std::shared_ptr<UserSongs>> songPlayList;
+};
 
 class cSnotify
 {
@@ -89,28 +102,27 @@ public:
 	//============ Custom Code Added here ================
 
 
-	void UpdateMusicFilePath(const std::string& newPath) { musicFilePath = newPath; }
 
-	void LoadMusicDataBase();
+	
 
 	cHashMap<int, cPerson*>& getUserList() { return m_userListSIN; }
 
 private:
 
-	// The Safe pointers to each of the generator class
-	std::shared_ptr<cMusicGenerator> m_musicGenerator;
+	
 
-
+	// ======= Data Container for Users
 	// User List by SIN
-	cHashMap<int, cPerson*> m_userListSIN;
+	cHashMap<int, cPerson*> m_userListSIN = cHashMap<int, cPerson*>(200);
 
 	// Data container to store users by snotify ID
-	cHashMap<int, int> m_snotifyIDToSIN;
-	//cVector<int> m_UserId
+	cHashMap<int, int> m_snotifyIDToSIN = cHashMap<int, int>(200);
+
+	// ====== Data Container for Songs in Snotify database
+	cHashMap<int, cSong*> m_songsList = cHashMap<int, cSong*>(200);
 
 
-
-	std::string musicFilePath = "Data\\hot_stuff_2.csv";
+	cVector<std::shared_ptr<SnotifyUser>> m_UserSongDictionary;
 
 };
 

@@ -21,6 +21,10 @@ public:
 	// So case sensitive, etc. 
 	cSong* findSong(std::string songName, std::string artist);
 
+
+	void UpdateMusicFilePath(const std::string& newPath) { musicFilePath = newPath; }
+	void LoadMusicDataBase();
+
 private:
 
 	bool StoreNewSong(const std::string& songName, const std::string& artistName);
@@ -28,9 +32,10 @@ private:
 private:
 
 	// Global Song Database
-	cHashMap<int, cSong*> m_SongDataBase = cHashMap<int, cSong*>(40000);
+	cHashMap<int, cSong*> m_SongDataBase = cHashMap<int, cSong*>(25000);
 
 	cVector<int> m_artistDatabase;
+	std::string musicFilePath = "Data\\hot_stuff_2.csv";
 
 };
 

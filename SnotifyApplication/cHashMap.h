@@ -91,8 +91,11 @@ public:
     inline unsigned int Entries() const;
     
     const_iterator Find(const Key& key) const;
-   
     iterator Find(const Key& key);
+
+  
+
+
     void Add(const Key& key, const Value& value);
     void Remove(const Key& key);
     Value& operator[](const Key& key);
@@ -185,6 +188,8 @@ typename cHashMap<Key, Value>::const_iterator cHashMap<Key, Value>::FindInternal
         }
     }
     return nullptr;
+
+
 }
 
 
@@ -201,6 +206,8 @@ typename cHashMap<Key, Value>::iterator cHashMap<Key, Value>::FindInternal(itera
         }
     }
     return nullptr;
+
+  
 }
 
 
@@ -221,6 +228,7 @@ typename cHashMap<Key, Value>::iterator cHashMap<Key, Value>::Find(const Key& ke
     cHashMap<Key, Value>::iterator find = this->FindInternal(hash_entries, end, key);
     return find;
 }
+
 
 
 
