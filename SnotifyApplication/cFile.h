@@ -13,7 +13,7 @@ public:
 
 	static std::string ReadFileToString(const std::string& path);
 	static bool WriteFileToText(const std::string& path, const std::string text);
-	inline static bool FileExists(const std::string& path);
+	static bool FileExists(const std::string& path);
 };
 
 

@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cFile.cpp" />
+    <ClCompile Include="cHashMap.cpp" />
     <ClCompile Include="cMusicGenerator.cpp" />
     <ClCompile Include="cPerson.cpp" />
     <ClCompile Include="cPersonGenerator.cpp" />

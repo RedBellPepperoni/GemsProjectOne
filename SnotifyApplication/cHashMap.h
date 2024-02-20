@@ -7,11 +7,21 @@
 
  
 
-namespace customHash {
 
+    constexpr static unsigned int HASH_NUM = 31337;
+    // Size of linked elemnts
+    constexpr static unsigned int DEFAULTsize = 4;
+
+    unsigned int GenerateHash(const int& key, const unsigned int& cHashMapsize);
    
 
-}
+    unsigned int GenerateHash(const std::string& key, const unsigned int& cHashMapsize);
+
+
+    unsigned int GenerateHash(const char* key, const unsigned int& cHashMapsize);
+
+
+
 
 
 template <typename Key, typename Value>
@@ -65,37 +75,6 @@ private:
     const_iterator FindInternalConst(const_iterator& begin, const_iterator& end, const Key& key) const;
 
 
-
-    const static unsigned int HASH_NUM = 31337;
-    // Size of linked elemnts
-    const static unsigned int DEFAULTsize = 4;
-
-    unsigned int GenerateHash(const int& key, const unsigned int& cHashMapsize)
-    {
-        return (key * HASH_NUM) % cHashMapsize;
-    }
-
-    unsigned int GenerateHash(const std::string& key, const unsigned int& cHashMapsize)
-    {
-        unsigned int position = 0;
-        for (unsigned int i = 0; i < key.size(); i++)
-        {
-            position += key[i] * i;
-        }
-
-        return position % cHashMapsize;
-    }
-
-    unsigned int GenerateHash(const char* key, const unsigned int& cHashMapsize)
-    {
-        unsigned int position = 0;
-        for (unsigned int i = 0; key[i] != '\0'; i++)
-        {
-            position += key[i] * i;
-        }
-
-        return position % cHashMapsize;
-    }
 
 public:
    

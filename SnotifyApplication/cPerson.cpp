@@ -1,5 +1,5 @@
 #include "cPerson.h"
-
+#include "cRandom.h"
 // Warning C26812 : Prefer 'enum class' over 'enum' (Enum.3)
 #pragma warning( disable : 26812 )
 
@@ -9,7 +9,9 @@ cPerson::cPerson()
 	this->gender = cPerson::RATHER_NOT_SAY_UNKNOWN;
 	this->streetNumber = 0;
 	this->age = -1;
-	this->SIN = 0;
+
+	// Get a random number 
+	this->SIN = cRandom::Range(100000000,999999999);
 
 	// Generate unique Snotify ID
 	this->m_Snotify_UniqueUserID = cPerson::m_NEXT_Snotify_UniqueUSerID;

@@ -23,11 +23,12 @@ public:
 
 private:
 
-	bool StoreNewSong(cSong* song);
+	bool StoreNewSong(const std::string& songName, const std::string& artistName);
+	
 private:
 
 	// Global Song Database
-	cHashMap<std::string, cSong*> m_SongDataBase;
+	cHashMap<int, cSong*> m_SongDataBase = cHashMap<int,cSong*>(40000);
 
 	cVector<int> m_artistDatabase;
 

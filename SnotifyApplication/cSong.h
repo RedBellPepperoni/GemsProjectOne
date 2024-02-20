@@ -2,6 +2,7 @@
 #define _cSong_HG_
 
 #include <string>
+#include "cRandom.h"
 
 // This represents a song in the Snotify class
 
@@ -12,7 +13,9 @@ public:
 	{
 		this->rating = 0;
 		this->numberOfTimesPlayed = 0;
+
 	}
+
 	std::string name;
 	std::string artist;
 	// These are used for user play statistics
@@ -25,8 +28,13 @@ public:
 	//	want to use that. 
 	unsigned int getUniqueID(void) { return this->uniqueID; }
 
+	void SetUniqueID(unsigned int newId) { uniqueID = newId; }
+
 	unsigned int uniqueID;
+
+
 }; 
+
 
 #endif
 

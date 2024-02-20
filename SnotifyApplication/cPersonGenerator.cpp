@@ -377,6 +377,7 @@ const std::string cPersonGenerator::GetRandomFirstName(const cPerson::eGenderTyp
 		break;
 	}
 
+	return std::string();
 	
 }
 
