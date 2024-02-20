@@ -56,5 +56,5 @@ std::string cPerson::getGenderAsString(void)
 
 unsigned int cPerson::getSnotifyUniqueUserID(void)
 {
-	return 0;
+	return m_Snotify_UniqueUserID;
 }

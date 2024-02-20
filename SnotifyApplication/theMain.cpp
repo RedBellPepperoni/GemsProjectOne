@@ -51,6 +51,13 @@ int main(int argc, char* argv)
 	
 	cPerson* person = snotify->FindUserBySIN(newPerson->GetSIN());
 
+	int snotifyId = person->getSnotifyUniqueUserID();
+
+	if (!snotify->DeleteUser(snotifyId, errorString))
+	{
+		printf(errorString.c_str());
+	}
+
 	
 
 }

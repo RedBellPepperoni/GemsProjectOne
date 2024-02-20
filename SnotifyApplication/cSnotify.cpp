@@ -42,11 +42,21 @@ cSnotify::~cSnotify()
 
 bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString)
 {
-	cHashElement<int, cPerson*>* iterator = m_userList.Find(pPerson->GetSIN());
+	cHashElement<int, cPerson*>* iterator = m_userListSIN.Find(pPerson->GetSIN());
 	
 	if (iterator == nullptr)
 	{
-		m_userList.Add(pPerson->GetSIN(), pPerson);
+		// Add to Both maps (High Space complexity but very low timecomplexity)
+		m_userListSIN.Add(pPerson->GetSIN(), pPerson);
+		m_userListSnotifyID.Add(pPerson->getSnotifyUniqueUserID(), pPerson);
+
+		return true;
+	}
+
+	if (iterator->value == nullptr)
+	{
+		iterator->value = pPerson;
+		m_userListSnotifyID[pPerson->getSnotifyUniqueUserID()] = pPerson;
 		return true;
 	}
 
@@ -63,7 +73,7 @@ bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString)
 
 
 
-	cHashElement<int, cPerson*>* iterator = m_userList.Find(pPerson->GetSIN());
+	cHashElement<int, cPerson*>* iterator = m_userListSIN.Find(pPerson->GetSIN());
 
 	if (iterator == nullptr)
 	{
@@ -72,14 +82,8 @@ bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString)
 	}
 
 
-	iterator->value->age = pPerson->age;
-	iterator->value->city = pPerson->city;
-	iterator->value->first = pPerson->first;
-	iterator->value->gender = pPerson->gender;
-	iterator->value->last = pPerson->last;
-	iterator->value->streetDirection = pPerson->streetDirection;
-	iterator->value->streetName = pPerson->streetName;
-	iterator->value->streetNumber = pPerson->streetNumber;
+	iterator->value = pPerson;
+	m_userListSnotifyID[pPerson->getSnotifyUniqueUserID()] = iterator->value;
 
 	return true;
 	
@@ -87,7 +91,22 @@ bool cSnotify::UpdateUser(cPerson* pPerson, std::string& errorString)
 
 bool cSnotify::DeleteUser(unsigned int SnotifyUserID, std::string& errorString)
 {
-	return false;
+	cHashElement<int, cPerson*>* iterator = m_userListSnotifyID.Find(SnotifyUserID);
+
+	if (iterator == nullptr)
+	{
+		errorString = "Snotify : NO User to Delete";
+		return false;
+	}
+
+	cPerson* person = iterator->value;
+	int SIN = person->GetSIN();
+
+	m_userListSnotifyID.Remove(SnotifyUserID);
+	m_userListSIN.Remove(SIN);
+
+	delete person;
+	
 }
 
 bool cSnotify::AddSong(cSong* pSong, std::string& errorString)
@@ -137,7 +156,7 @@ bool cSnotify::GetCurrentSongNumberOfPlays(unsigned int snotifyUserID, unsigned 
 
 cPerson* cSnotify::FindUserBySIN(unsigned int SIN)
 {
-	cHashElement<int, cPerson*>* iterator = m_userList.Find(SIN);
+	cHashElement<int, cPerson*>* iterator = m_userListSIN.Find(SIN);
 
 	if (iterator == nullptr)
 	{

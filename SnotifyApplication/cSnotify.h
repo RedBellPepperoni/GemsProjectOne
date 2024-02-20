@@ -93,7 +93,7 @@ public:
 
 	void LoadMusicDataBase();
 
-	cHashMap<int, cPerson*>& getUserList() { return m_userList; }
+	cHashMap<int, cPerson*>& getUserList() { return m_userListSIN; }
 
 private:
 
@@ -101,9 +101,10 @@ private:
 	std::shared_ptr<cMusicGenerator> m_musicGenerator;
 
 
-	//cVector<cPerson*> m_userList;
-
-	cHashMap<int, cPerson*> m_userList;
+	// User List by SIN
+	cHashMap<int, cPerson*> m_userListSIN;
+	// Data container to store users by snotify ID
+	cHashMap<int, cPerson*> m_userListSnotifyID;
 	//cVector<int> m_UserId
 
 
