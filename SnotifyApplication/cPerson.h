@@ -65,8 +65,6 @@ private:
 	// 
 	static unsigned int m_NEXT_Snotify_UniqueUSerID;
 
-
-	cVector<cSong*> m_SongList;
 };
 
 

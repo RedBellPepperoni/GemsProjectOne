@@ -73,10 +73,12 @@ int main(int argc, char* argv)
 	
 
 
-	_CHECK(snotify->AddSongToUserLibrary(person1->getSnotifyUniqueUserID(),oldSong2,errorString));
-	_CHECK(snotify->AddSongToUserLibrary(person1->getSnotifyUniqueUserID(),oldSong3,errorString));
-	_CHECK(snotify->AddSongToUserLibrary(person1->getSnotifyUniqueUserID(),oldSong4,errorString));
+	snotify->AddSongToUserLibrary(person1->getSnotifyUniqueUserID(),oldSong2,errorString);
+	snotify->AddSongToUserLibrary(person1->getSnotifyUniqueUserID(),oldSong3,errorString);
+	snotify->AddSongToUserLibrary(person1->getSnotifyUniqueUserID(),oldSong4,errorString);
 
+	
+	SnotifyUser* user = snotify->GetSnotifyUser(person1->getSnotifyUniqueUserID());
 
 
 

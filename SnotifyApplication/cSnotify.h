@@ -10,18 +10,12 @@
 class cMusicGenerator;
 class cPersonGenerator;
 
-struct UserSongs
-{
-	int songID;
-	int playbackCount = 0;
-	int rating = 0;
-};
 
 
 struct SnotifyUser
 {
 	int userId;
-	cVector<std::shared_ptr<UserSongs>> songPlayList;
+	cVector<std::shared_ptr<cSong>> songPlayList;
 };
 
 class cSnotify
@@ -107,10 +101,12 @@ public:
 
 	cHashMap<int, cPerson*>& getUserList() { return m_userListSIN; }
 
+	cSong* GetSongData(const unsigned int snotifyUserID, const unsigned int snotifySongID);
+	SnotifyUser* GetSnotifyUser(const unsigned int snotifyUserID);
+
 private:
 
-	UserSongs* GetSongData(const unsigned int snotifyUserID, const unsigned int snotifySongID);
-	SnotifyUser* GetUser(const unsigned int snotifyUserID);
+	
 
 private:
 

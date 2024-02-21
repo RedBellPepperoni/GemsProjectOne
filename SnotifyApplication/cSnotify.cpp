@@ -188,18 +188,22 @@ bool cSnotify::AddSongToUserLibrary(unsigned int snotifyUserID, cSong* pNewSong,
 		return false;
 
 	}
-	SnotifyUser* user = GetUser(snotifyUserID);
+	SnotifyUser* user = GetSnotifyUser(snotifyUserID);
 
 	if (user == nullptr)
 	{
 		return false;
 	}
 
-	std::shared_ptr<UserSongs> song = std::make_shared<UserSongs>();
+	std::shared_ptr<cSong> song = std::make_shared<cSong>();
+	
+	//cSong* song = new cSong();
 
-	song->songID = pNewSong->getUniqueID();
+	song->uniqueID = pNewSong->getUniqueID();
 	song->rating = 0;
-	song->playbackCount = 0;
+	song->numberOfTimesPlayed = 0;
+	song->artist = pNewSong->artist;
+	song->name = pNewSong->name;
 
 	user->songPlayList.Emplace(song);
 
@@ -209,7 +213,7 @@ bool cSnotify::AddSongToUserLibrary(unsigned int snotifyUserID, cSong* pNewSong,
 bool cSnotify::RemoveSongFromUserLibrary(unsigned int snotifyUserID, unsigned int SnotifySongID, std::string& errorString)
 {
 
-	SnotifyUser* user = GetUser(snotifyUserID);
+	SnotifyUser* user = GetSnotifyUser(snotifyUserID);
 
 	if (user == nullptr)
 	{
@@ -220,7 +224,7 @@ bool cSnotify::RemoveSongFromUserLibrary(unsigned int snotifyUserID, unsigned in
 
 	for (int i = 0; i < user->songPlayList.Size(); i++)
 	{
-		if (user->songPlayList[i]->songID == SnotifySongID)
+		if (user->songPlayList[i]->getUniqueID() == SnotifySongID)
 		{
 			user->songPlayList[i] = user->songPlayList.Back();
 			user->songPlayList.Pop();
@@ -237,7 +241,7 @@ bool cSnotify::RemoveSongFromUserLibrary(unsigned int snotifyUserID, unsigned in
 
 bool cSnotify::UpdateRatingOnSong(unsigned int SnotifyUserID, unsigned int songUniqueID, unsigned int newRating)
 {
-	UserSongs* song = GetSongData(SnotifyUserID, songUniqueID);
+	cSong* song = GetSongData(SnotifyUserID, songUniqueID);
 	
 	if(song == nullptr)
 	{
@@ -257,7 +261,7 @@ cSong* cSnotify::GetSong(unsigned int SnotifyUserID, unsigned int songUniqueID, 
 
 bool cSnotify::GetCurrentSongRating(unsigned int snotifyUserID, unsigned int songUniqueID, unsigned int& songRating)
 {
-	UserSongs* song = GetSongData(snotifyUserID, songUniqueID);
+	cSong* song = GetSongData(snotifyUserID, songUniqueID);
 
 	if (song == nullptr)
 	{
@@ -274,14 +278,14 @@ bool cSnotify::GetCurrentSongRating(unsigned int snotifyUserID, unsigned int son
 
 bool cSnotify::GetCurrentSongNumberOfPlays(unsigned int snotifyUserID, unsigned int songUniqueID, unsigned int& numberOfPlays)
 {
-	UserSongs* song = GetSongData(snotifyUserID, songUniqueID); 
+	cSong* song = GetSongData(snotifyUserID, songUniqueID); 
 
 	if (song == nullptr) 
 	{ 
 		return false;
 	}
 
-	numberOfPlays = song->playbackCount;
+	numberOfPlays = song->numberOfTimesPlayed;
 
 	return true;
 }
@@ -324,6 +328,8 @@ cPerson* cSnotify::FindUserBySnotifyID(unsigned int SnotifyID)
 
 cSong* cSnotify::FindSong(std::string title, std::string artist)
 {
+	cHashElement<int, cSong*>* beginIterator;
+
 	return nullptr;
 }
 
@@ -344,6 +350,19 @@ cSong* cSnotify::FindSong(unsigned int uniqueID)
 
 bool cSnotify::GetUsersSongLibrary(unsigned int snotifyUserID, cSong*& pLibraryArray, unsigned int& sizeOfLibary)
 {
+	SnotifyUser* user = GetSnotifyUser(snotifyUserID);
+
+	if (user == nullptr)
+	{
+		return false;
+	}
+
+	sizeOfLibary = user->songPlayList.Size();
+
+	pLibraryArray  = user->songPlayList.Data()->get();
+
+
+
 	return false;
 }
 
@@ -382,21 +401,21 @@ bool cSnotify::FindUsersFirstLastNames(std::string firstName, std::string lastNa
 	return false;
 }
 
-UserSongs* cSnotify::GetSongData(const unsigned int snotifyUserID, const unsigned int snotifySongID)
+cSong* cSnotify::GetSongData(const unsigned int snotifyUserID, const unsigned int snotifySongID)
 {
-	SnotifyUser* user = GetUser(snotifyUserID);
+	SnotifyUser* user = GetSnotifyUser(snotifyUserID);
 
 	if (user == nullptr)
 	{
 		return nullptr;
 	}
 
-	UserSongs* song = nullptr;
+	cSong* song = nullptr;
 
 
 	for (int i = 0; i < user->songPlayList.Size(); i++)
 	{
-		if (user->songPlayList[i]->songID == snotifySongID)
+		if (user->songPlayList[i]->getUniqueID() == snotifySongID)
 		{
 			song = user->songPlayList[i].get();
 
@@ -413,7 +432,7 @@ UserSongs* cSnotify::GetSongData(const unsigned int snotifyUserID, const unsigne
 
 }
 
-SnotifyUser* cSnotify::GetUser(const unsigned int snotifyUserID)
+SnotifyUser* cSnotify::GetSnotifyUser(const unsigned int snotifyUserID)
 {
 	SnotifyUser* user = nullptr;
 
