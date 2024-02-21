@@ -6,6 +6,7 @@
 #include "cVector.h"
 #include "cHashMap.h"
 #include <memory>
+#include "Core.h"
 
 class cMusicGenerator;
 class cPersonGenerator;

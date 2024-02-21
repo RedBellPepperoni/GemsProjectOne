@@ -32,7 +32,12 @@ int main(int argc, char* argv)
 	// Create a new snotify class
 	std::shared_ptr<cSnotify> snotify = std::make_shared<cSnotify>(); 
 
-	
+	// Finding a song on a bigger Data set
+	cSong* song =  musicGenerator->findSong("Carrie", "Europe");
+
+	//Finding a song that doesnt exist
+	cSong* songMew =  musicGenerator->findSong("..", "yees");
+
 
 	//std::string errorString;
 

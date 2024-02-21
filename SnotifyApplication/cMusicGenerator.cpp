@@ -2,6 +2,8 @@
 #include "cFile.h"
 #include <fstream>
 #include <sstream>
+#include "Core.h"
+
 
 cMusicGenerator::cMusicGenerator()
 {
@@ -91,7 +93,20 @@ cSong* cMusicGenerator::getRandomSong(void)
 
 cSong* cMusicGenerator::findSong(std::string songName, std::string artist)
 {
-    return nullptr;
+	std::string hashname = songName + artist;
+
+	int hash = GenerateHash(hashname, HASH_NUM);
+
+	cHashElement<int, cSong*>* song = m_SongDataBase.Find(hash);
+
+	if (song == nullptr)
+	{
+		printf("Song Doesnt Exist\n");
+		return nullptr;
+	}
+
+	return song->value;
+
 }
 
 void cMusicGenerator::LoadMusicDataBase()
@@ -112,7 +127,10 @@ void cMusicGenerator::LoadMusicDataBase()
 bool cMusicGenerator::StoreNewSong(const std::string& songName, const std::string& artistName)
 {
 	std::string uniqueKey = songName + artistName; 
-	int songId = GenerateHash(uniqueKey, m_SongDataBase.Size());
+	int songId = GenerateHash(uniqueKey, HashNUM);
+
+	//int hash = GenerateHash(songId, m_SongDataBase.Size());
+
 	// Checking if a entry exists for the given HAsh
 	cHashElement<int, cSong*>* duplicateEntry = m_SongDataBase.Find(songId);
 

@@ -131,6 +131,7 @@
     <ClInclude Include="cFile.h" />
     <ClInclude Include="cHashMap.h" />
     <ClInclude Include="cMusicGenerator.h" />
+    <ClInclude Include="Core.h" />
     <ClInclude Include="cRandom.h" />
     <ClInclude Include="cSong.h" />
     <ClInclude Include="cPerson.h" />

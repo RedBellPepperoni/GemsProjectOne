@@ -125,6 +125,8 @@ bool cSnotify::DeleteUser(unsigned int SnotifyUserID, std::string& errorString)
 	delete perosn;
 	perosn = nullptr;
 
+	return true;
+
 }
 
 bool cSnotify::AddSong(cSong* pSong, std::string& errorString)
@@ -178,6 +180,8 @@ bool cSnotify::DeleteSong(unsigned int UniqueSongID, std::string& errorString)
 	delete song;
 	song = nullptr;
 	m_songsList.Remove(UniqueSongID);
+
+	return true;
 }
 
 bool cSnotify::AddSongToUserLibrary(unsigned int snotifyUserID, cSong* pNewSong, std::string& errorString)
@@ -328,15 +332,24 @@ cPerson* cSnotify::FindUserBySnotifyID(unsigned int SnotifyID)
 
 cSong* cSnotify::FindSong(std::string title, std::string artist)
 {
-	cHashElement<int, cSong*>* beginIterator;
+	std::string hashedname = title + artist;
+	int hash = GenerateHash(hashedname, HASH_NUM);
 
-	return nullptr;
+	cHashElement<int, cSong*>* snotIterator = m_songsList.Find(hash);
+
+	if (snotIterator == nullptr)
+	{
+		printf("No song found");
+	}
+
+
+
+	return snotIterator->value;
 }
 
 cSong* cSnotify::FindSong(unsigned int uniqueID)
 {
 	cHashElement<int, cSong*>* snotIterator = m_songsList.Find(uniqueID);
-
 	if (snotIterator == nullptr)
 	{
 		printf("Snotify[FindSong] : Song doesnt exist with id %d ",uniqueID);
@@ -357,7 +370,7 @@ bool cSnotify::GetUsersSongLibrary(unsigned int snotifyUserID, cSong*& pLibraryA
 		return false;
 	}
 
-	sizeOfLibary = user->songPlayList.Size();
+	sizeOfLibary = (unsigned int)user->songPlayList.Size();
 
 	pLibraryArray  = user->songPlayList.Data()->get();
 
@@ -378,6 +391,8 @@ bool cSnotify::GetUsersSongLibraryAscendingByArtist(unsigned int snotifyUserID, 
 
 bool cSnotify::GetUsers(cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray)
 {
+	cVector<>
+
 	return false;
 }
 
