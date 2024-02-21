@@ -44,18 +44,11 @@ bool cSnotify::AddUser(cPerson* pPerson, std::string& errorString)
 	cHashElement<int, cPerson*>* iterator = m_userListSIN.Find(pPerson->GetSIN());
 
 	
-	
 	if (iterator == nullptr)
 	{
 		// Add to Both maps (High Space complexity but very low timecomplexity)
 		m_userListSIN.Add(pPerson->GetSIN(), pPerson);
 		m_snotifyIDToSIN.Add(pPerson->getSnotifyUniqueUserID(), pPerson->GetSIN());
-
-		std::shared_ptr<SnotifyUser> user = std::make_shared<SnotifyUser>();
-		user->userId = pPerson->getSnotifyUniqueUserID();
-
-
-		m_UserSongDictionary.Emplace(user);
 		return true;
 	}
 
@@ -107,19 +100,6 @@ bool cSnotify::DeleteUser(unsigned int SnotifyUserID, std::string& errorString)
 	int SIN = iterator->value;
 	cPerson* perosn = m_userListSIN.Find(SIN)->value;
 	m_snotifyIDToSIN.Remove(SnotifyUserID);
-
-	for (int i = 0; i < m_UserSongDictionary.Size(); i++)
-	{
-		if (m_UserSongDictionary[i]->userId == SnotifyUserID)
-		{
-			m_UserSongDictionary[i] = m_UserSongDictionary.Back();
-			m_UserSongDictionary.Pop();
-
-			break;
-		}
-
-	}
-
 	m_userListSIN.Remove(SIN);
 
 	delete perosn;
@@ -192,7 +172,7 @@ bool cSnotify::AddSongToUserLibrary(unsigned int snotifyUserID, cSong* pNewSong,
 		return false;
 
 	}
-	SnotifyUser* user = GetSnotifyUser(snotifyUserID);
+	cPerson* user = FindUserBySnotifyID(snotifyUserID);
 
 	if (user == nullptr)
 	{
@@ -217,7 +197,7 @@ bool cSnotify::AddSongToUserLibrary(unsigned int snotifyUserID, cSong* pNewSong,
 bool cSnotify::RemoveSongFromUserLibrary(unsigned int snotifyUserID, unsigned int SnotifySongID, std::string& errorString)
 {
 
-	SnotifyUser* user = GetSnotifyUser(snotifyUserID);
+	cPerson* user = FindUserBySnotifyID(snotifyUserID);
 
 	if (user == nullptr)
 	{
@@ -363,7 +343,7 @@ cSong* cSnotify::FindSong(unsigned int uniqueID)
 
 bool cSnotify::GetUsersSongLibrary(unsigned int snotifyUserID, cSong*& pLibraryArray, unsigned int& sizeOfLibary)
 {
-	SnotifyUser* user = GetSnotifyUser(snotifyUserID);
+	cPerson* user = FindUserBySnotifyID(snotifyUserID);
 
 	if (user == nullptr)
 	{
@@ -391,7 +371,7 @@ bool cSnotify::GetUsersSongLibraryAscendingByArtist(unsigned int snotifyUserID, 
 
 bool cSnotify::GetUsers(cPerson*& pAllTheUsers, unsigned int& sizeOfUserArray)
 {
-	cVector<>
+	
 
 	return false;
 }
@@ -418,7 +398,7 @@ bool cSnotify::FindUsersFirstLastNames(std::string firstName, std::string lastNa
 
 cSong* cSnotify::GetSongData(const unsigned int snotifyUserID, const unsigned int snotifySongID)
 {
-	SnotifyUser* user = GetSnotifyUser(snotifyUserID);
+	cPerson* user = FindUserBySnotifyID(snotifyUserID);
 
 	if (user == nullptr)
 	{
@@ -447,25 +427,25 @@ cSong* cSnotify::GetSongData(const unsigned int snotifyUserID, const unsigned in
 
 }
 
-SnotifyUser* cSnotify::GetSnotifyUser(const unsigned int snotifyUserID)
-{
-	SnotifyUser* user = nullptr;
-
-	for (int i = 0; i < m_UserSongDictionary.Size(); i++)
-	{
-		if (m_UserSongDictionary[i]->userId == snotifyUserID)
-		{
-			user = m_UserSongDictionary[i].get();
-			break;
-		}
-
-	}
-
-	if (user == nullptr)
-	{
-		printf("No User Found with the id , %d\n", snotifyUserID);
-	}
-
-	return user;
-}
+//cPerson* cSnotify::GetSnotifyUser(const unsigned int snotifyUserID)
+//{
+//	cPerson* user = nullptr;
+//
+//	for (int i = 0; i < m_UserSongDictionary.Size(); i++)
+//	{
+//		if (m_UserSongDictionary[i]->getSnotifyUniqueUserID() == snotifyUserID)
+//		{
+//			user = m_UserSongDictionary[i].get();
+//			break;
+//		}
+//
+//	}
+//
+//	if (user == nullptr)
+//	{
+//		printf("No User Found with the id , %d\n", snotifyUserID);
+//	}
+//
+//	return user;
+//}
 

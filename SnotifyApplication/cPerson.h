@@ -60,6 +60,11 @@ public:
 
 	unsigned int getSnotifyUniqueUserID(void);
 	unsigned int GetSIN() { return SIN; };
+
+
+	cVector<std::shared_ptr<cSong>> songPlayList;
+
+
 private:
 	unsigned int m_Snotify_UniqueUserID;
 	// 

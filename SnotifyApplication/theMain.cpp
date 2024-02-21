@@ -83,7 +83,7 @@ int main(int argc, char* argv)
 	snotify->AddSongToUserLibrary(person1->getSnotifyUniqueUserID(),oldSong4,errorString);
 
 	
-	SnotifyUser* user = snotify->GetSnotifyUser(person1->getSnotifyUniqueUserID());
+	cPerson* user = snotify->FindUserBySnotifyID(person1->getSnotifyUniqueUserID());
 
 
 

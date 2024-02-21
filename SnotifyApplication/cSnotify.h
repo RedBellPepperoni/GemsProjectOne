@@ -13,11 +13,7 @@ class cPersonGenerator;
 
 
 
-struct SnotifyUser
-{
-	int userId;
-	cVector<std::shared_ptr<cSong>> songPlayList;
-};
+
 
 class cSnotify
 {
@@ -103,7 +99,7 @@ public:
 	cHashMap<int, cPerson*>& getUserList() { return m_userListSIN; }
 
 	cSong* GetSongData(const unsigned int snotifyUserID, const unsigned int snotifySongID);
-	SnotifyUser* GetSnotifyUser(const unsigned int snotifyUserID);
+	//cPerson* GetSnotifyUser(const unsigned int snotifyUserID);
 
 private:
 
@@ -124,7 +120,7 @@ private:
 	cHashMap<int, cSong*> m_songsList = cHashMap<int, cSong*>(200);
 
 
-	cVector<std::shared_ptr<SnotifyUser>> m_UserSongDictionary;
+	/*cVector<std::shared_ptr<cPerson>> m_UserSongDictionary;*/
 
 };
 
